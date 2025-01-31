@@ -12,17 +12,10 @@ This project implements a gradient descent optimization method using an **Equal 
 
 ## Requirements
 Ensure you have the following Python libraries installed:
+```bash
 pip install numpy matplotlib
 python Version2graphIncluded.py
+                                
 
-##Output
-Optimal Step Size: 0.195
-Minimum Point: (0.2, -0.3)
-Minimum Value: 9.2
-Test passed: Descent direction aligns with the minimum point.
-Test passed: The minimum point is the actual minimum.
-
-
-Let me know if you want any modifications! 🚀
 
 
