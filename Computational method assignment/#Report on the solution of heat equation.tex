@@ -1,0 +1,258 @@
+#Report on the solution of heat equation using finie difference method for implicit and explicit schemes
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{subcaption}
+
+
+\geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=20mm,
+ top=20mm,
+ }
+\title{Solution of Heat Equation using Finite Difference Method}
+\author{Anirudh Singh}
+\date{\today}
+\begin{document}
+\maketitle
+\begin{abstract}
+In this report, we will solve the heat equation using finite difference method. We will use both implicit and explicit schemes to solve the heat equation. We will compare the results obtained from both the schemes and discuss the stability of the schemes. We will also discuss the convergence of the schemes.
+\end{abstract}
+
+\section{Introduction}
+The heat equation is a parabolic partial differential equation that describes the distribution of heat (or variation in temperature) in a given region over time. The heat equation is given by
+
+\section{Explicit Scheme}
+The heat equation is given by
+\begin{equation}
+\frac{\partial u}{\partial t} = \alpha \nabla^2 u
+\end{equation}
+where $\alpha$ is the thermal diffusivity. We will solve the heat equation using finite difference method. We will use explicit scheme to solve the heat equation. The explicit scheme is given by
+
+
+
+\section{Discretization Using Finite Difference Method}
+The derivatives are approximated as follows:
+
+\subsection{Time Discretization (Forward Difference)}
+\begin{equation}
+    \frac{\partial u}{\partial t} \approx \frac{u_i^{n+1} - u_i^n}{\Delta t}
+\end{equation}
+
+\subsection{Space Discretization (Central Difference)}
+\begin{equation}
+    \frac{\partial^2 u}{\partial x^2} \approx \frac{u_{i+1}^n - 2u_i^n + u_{i-1}^n}{\Delta x^2}
+\end{equation}
+
+Substituting these into the heat equation:
+\begin{equation}
+    \frac{u_i^{n+1} - u_i^n}{\Delta t} = \alpha \frac{u_{i+1}^n - 2u_i^n + u_{i-1}^n}{\Delta x^2}
+\end{equation}
+Rearranging for \( u_i^{n+1} \):
+\begin{equation}
+    u_i^{n+1} = u_i^n + \lambda \left( u_{i+1}^n - 2u_i^n + u_{i-1}^n \right)
+\end{equation}
+where \( \lambda = \frac{\alpha \Delta t}{\Delta x^2} \).
+
+\section{Algorithm}
+\begin{enumerate}
+    \item \textbf{Initialize:} Define the spatial domain \( x \in [0, L] \) and time domain \( t \in [0, T] \).
+    \item \textbf{Discretize:} Choose step sizes \( \Delta x \) and \( \Delta t \) such that the stability condition \( \lambda \leq 0.5 \) is satisfied.
+    \item \textbf{Set Initial Condition:} Define \( u(x,0) \) for all spatial points.
+    \item \textbf{Time Stepping:} For each time step \( n \):
+    \begin{enumerate}
+        \item Compute the new temperature values using:
+        \begin{equation}
+            u_i^{n+1} = u_i^n + \lambda \left( u_{i+1}^n - 2u_i^n + u_{i-1}^n \right)
+        \end{equation}
+        \item Apply boundary conditions as required.
+    \end{enumerate}
+    \item \textbf{Repeat Until} \( t = T \).
+\end{enumerate}
+
+
+
+\section{Implicit Scheme}
+The implicit scheme for solving the heat equation is given by
+To numerically solve this equation, we employ the implicit finite difference method, leading to a system of linear equations that can be solved efficiently using the Thomas algorithm.
+
+\section{Numerical Method}
+
+\subsection{Finite Difference Discretization}
+Using the implicit backward Euler method, the heat equation is discretized as:
+\begin{equation}
+    \frac{u_i^{n+1} - u_i^n}{\Delta t} = \alpha \frac{u_{i+1}^{n+1} - 2u_i^{n+1} + u_{i-1}^{n+1}}{\Delta x^2}.
+\end{equation}
+Rearranging,
+\begin{equation}
+    -\beta u_{i-1}^{n+1} + (1 + 2\beta) u_i^{n+1} - \beta u_{i+1}^{n+1} = u_i^n,
+\end{equation}
+where $\beta = \frac{\alpha \Delta t}{\Delta x^2}$.
+This forms a tridiagonal system that can be solved using the Thomas algorithm.
+
+\subsection{Tridiagonal Matrix Formulation}
+The discretized system can be written in matrix form as:
+\begin{equation}
+\begin{bmatrix}
+    1+2\beta & -\beta & 0 & \dots & 0 \\
+    -\beta & 1+2\beta & -\beta & \dots & 0 \\
+    0 & -\beta & 1+2\beta & \dots & 0 \\
+    \vdots & \vdots & \vdots & \ddots & \vdots \\
+    0 & 0 & 0 & -\beta & 1+2\beta
+\end{bmatrix}
+\begin{bmatrix}
+    u_1^{n+1} \\
+    u_2^{n+1} \\
+    u_3^{n+1} \\
+    \vdots \\
+    u_N^{n+1}
+\end{bmatrix}
+=
+\begin{bmatrix}
+    u_1^n \\
+    u_2^n \\
+    u_3^n \\
+    \vdots \\
+    u_N^n
+\end{bmatrix}.
+\end{equation}
+
+\subsection{Thomas Algorithm}
+The tridiagonal system is expressed as:
+\begin{equation}
+    A u^{n+1} = u^n,
+\end{equation}
+where $A$ is a tridiagonal matrix with elements:
+\begin{itemize}
+    \item Lower diagonal: $a_i = -\beta$
+    \item Main diagonal: $b_i = 1 + 2\beta$
+    \item Upper diagonal: $c_i = -\beta$
+    \item Right-hand side: $d_i = u_i^n$
+\end{itemize}
+The Thomas algorithm consists of:
+
+\textbf{Forward elimination:}
+\begin{align}
+    w &= \frac{a_i}{b_{i-1}'} \\
+    b_i' &= b_i - w c_{i-1} \\
+    d_i' &= d_i - w d_{i-1}'
+\end{align}
+
+\textbf{Backward substitution:}
+\begin{align}
+    u_N &= \frac{d_N'}{b_N'} \\
+    u_i &= \frac{d_i' - c_i u_{i+1}}{b_i'} \quad \text{(for $i = N-1$ to $1$)}.
+\end{align}
+
+The Thomas algorithm efficiently solves the tridiagonal system arising from the implicit finite difference formulation of the heat equation. This method ensures stability, allowing larger time steps compared to explicit schemes. Further extensions include two-dimensional cases and adaptive time stepping.
+
+
+\section*{Questions}
+
+\begin{enumerate}
+    \item Compare the residual of the equation with time for implicit and explicit methods for different \( \beta \) values.
+    \item Can you get a solution for any \( \Delta t \)? Show this by taking another value for \( \Delta x \).
+    \item For a given \( \Delta x \) and \( \Delta t \), how much time does the explicit method and implicit method take to reach a steady state? Compare.
+\end{enumerate}
+
+\subsection*{Answers}
+
+\textbf{Ans 1.} The problem asks to compare the residual of the equation over time for both the implicit and explicit methods, considering different values of \( \beta \). The residual indicates the error between the numerical solution and the exact solution at each time step. It provides a measure of how well the numerical method is approximating the actual solution.
+
+\subsection*{Implicit Method}
+In the implicit method, the solution at time step \( n+1 \) is determined by solving a system of equations that involve values at both the current and next time steps. The method is unconditionally stable, meaning that it can handle larger time steps (\( \Delta t \)) without becoming unstable. As a result, the residual for the implicit method tends to decrease over time, even for larger values of \( \beta \). However, this method is computationally more expensive due to the need for solving a system of equations at each time step.
+
+\subsection*{Explicit Method}
+The explicit method computes the solution at the next time step based on known values at the current time step. Although it is computationally less expensive than the implicit method, the explicit method is conditionally stable, meaning that the time step \( \Delta t \) must be sufficiently small to avoid instability. If \( \beta \) is large or if \( \Delta t \) is too large, the residual in the explicit method can become large, reflecting poor accuracy and possible instability.
+
+\subsection*{Effect of \( \beta \) on Residuals}
+The parameter \( \beta \) (which could be related to the CFL number or thermal diffusivity) affects the stability and accuracy of both methods:
+\begin{itemize}
+    \item For large values of \( \beta \), the explicit method may become unstable if \( \Delta t \) is not small enough, leading to large residuals. In contrast, the implicit method can handle larger values of \( \beta \) without instability, and the residuals remain relatively small.
+    \item For small values of \( \beta \), both methods can maintain stability, and the residuals in both cases will be small. The difference between the methods becomes less significant.
+\end{itemize}
+
+\subsection*{Comparison of Residuals Over Time}
+The residuals over time for the implicit and explicit methods behave differently:
+\begin{itemize}
+    \item The residual for the implicit method decreases over time, even for larger values of \( \beta \). This is because the implicit method is stable and can handle larger time steps.
+    \item The residual for the explicit method may initially be small, but as time progresses, especially for larger \( \beta \) values, the residual can increase or oscillate, reflecting instability or poor accuracy unless a very small time step is used.
+\end{itemize}
+
+The explicit method is computationally less expensive, but its residual increases or oscillates for larger values of \( \beta \), especially when the time step is not small enough. The implicit method, while more expensive to compute, remains stable and has smaller residuals even for larger \( \beta \) values and larger time steps.
+
+Thus, the implicit method generally performs better in terms of stability and accuracy for larger values of \( \beta \), while the explicit method requires smaller time steps to maintain stability and low residuals.
+
+\textbf{Ans 2.} The second question asks whether a solution can be obtained for any time step \( \Delta t \). Specifically, it asks us to demonstrate this by taking another value for \( \Delta x \).
+
+\subsection*{Solution Existence for Any \( \Delta t \)}
+In numerical methods for solving partial differential equations such as the heat equation, the existence of a solution depends on the stability of the method. The stability of the explicit and implicit methods is affected by the choice of the time step \( \Delta t \) and spatial step \( \Delta x \).
+
+\subsection*{Explicit Method Stability}
+For the explicit method, the time step \( \Delta t \) is constrained by a stability condition. The well-known Courant–Friedrichs–Lewy (CFL) condition for the explicit method is given by:
+\[
+\lambda = \frac{\alpha \Delta t}{\Delta x^2} \leq \frac{1}{2}
+\]
+where \( \alpha \) is the thermal diffusivity, and \( \Delta x \) and \( \Delta t \) are the spatial and temporal steps, respectively. This condition ensures that the explicit method remains stable.
+
+If \( \Delta t \) is too large relative to \( \Delta x \), the explicit method may become unstable, leading to divergent solutions. Therefore, the solution cannot be obtained for arbitrary values of \( \Delta t \) if this stability condition is violated.
+
+\subsection*{Implicit Method Stability}
+The implicit method, on the other hand, is unconditionally stable. This means that no matter how large the time step \( \Delta t \) is, the method will always provide a stable solution, as long as the system of equations can be solved. The implicit method does not have the strict stability constraint that the explicit method does, so it can handle much larger values of \( \Delta t \) compared to the explicit method.
+
+\subsection*{Effect of Changing \( \Delta x \)}
+When we change \( \Delta x \), we affect the spatial resolution of the grid. Smaller values of \( \Delta x \) lead to more grid points, which generally result in a more accurate solution. If \( \Delta x \) is reduced, the CFL condition for the explicit method requires that \( \Delta t \) also be reduced to maintain stability. 
+
+For the implicit method, changing \( \Delta x \) has less of an impact on the stability or solution process, as it is unconditionally stable. However, reducing \( \Delta x \) will require solving a larger system of equations at each time step, making the computation more expensive.
+
+\begin{itemize}
+    \item The explicit method has a stability condition that limits the size of \( \Delta t \) relative to \( \Delta x \). Therefore, a solution can only be obtained for time steps that satisfy the CFL condition. If \( \Delta t \) is too large for a given \( \Delta x \), the solution will not be stable.
+    \item The implicit method, being unconditionally stable, allows for larger \( \Delta t \) values, meaning a solution can be obtained for any \( \Delta t \), regardless of the choice of \( \Delta x \).
+\end{itemize}
+
+Thus, a solution can be obtained for any \( \Delta t \) using the implicit method, but the explicit method requires careful selection of \( \Delta t \) to ensure stability.
+
+\textbf{Ans 3.}  The question asks: "For a given \( \Delta x \) and \( \Delta t \), how much time does the explicit method and implicit method take to reach the steady state? Compare."
+
+\subsection*{Steady State in Heat Equation}
+In the context of the heat equation, the \textit{steady state} is reached when the temperature distribution no longer changes with time. Mathematically, this occurs when the solution at the next time step is nearly identical to the solution at the current time step, meaning the residual is close to zero. The time required for both methods to reach the steady state depends on the stability and accuracy of the method, as well as the chosen values for \( \Delta x \) and \( \Delta t \).
+
+\subsection*{Time to Reach Steady State Using Explicit Method}
+The explicit method requires smaller time steps for stability, which can significantly slow down the convergence to the steady state. The time step \( \Delta t \) is constrained by the CFL condition:
+
+\[
+\lambda = \frac{\alpha \Delta t}{\Delta x^2} \leq \frac{1}{2}
+\]
+
+Due to this condition, the explicit method tends to take more time to reach the steady state when compared to the implicit method, especially if \( \Delta x \) is small. This means that for large grids or high-resolution problems, the explicit method will require numerous time steps to achieve the steady state.
+
+\subsection*{Time to Reach Steady State Using Implicit Method}
+The implicit method, on the other hand, is unconditionally stable, which means it can take larger time steps without violating stability. As a result, it typically reaches the steady state much faster than the explicit method. Even with larger \( \Delta t \), the implicit method can achieve stable solutions without the need for excessive time step reductions, making it more efficient in terms of computational time for reaching steady state.
+
+While the implicit method may require more computation per time step due to solving a system of equations, the overall number of time steps is generally smaller, leading to faster convergence to the steady state.
+
+\subsection*{Comparison}
+\begin{itemize}
+    \item The \textbf{explicit method} requires smaller time steps to ensure stability and takes more time to reach the steady state. The number of time steps is higher because of the strict stability condition.
+    \item The \textbf{implicit method} can take larger time steps and reaches the steady state more quickly. While each time step is more computationally expensive due to solving a system of equations, the total computational effort is typically smaller because fewer time steps are required.
+\end{itemize}
+
+In summary, the implicit method generally reaches the steady state more quickly than the explicit method for a given \( \Delta x \) and \( \Delta t \). This is due to the larger permissible time steps and the unconditionally stable nature of the implicit method. While the explicit method requires smaller time steps for stability, it requires more time steps overall to converge to the steady state, making it slower in comparison.
+
+
+\end{document}
+

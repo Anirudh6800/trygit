@@ -15,6 +15,8 @@ Ensure you have the following Python libraries installed:
 ```bash
 pip install numpy matplotlib
 python Version2graphIncluded.py
+```
+this is to test the code and see the graph.
                                 
 
 
